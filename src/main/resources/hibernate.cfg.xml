@@ -13,5 +13,9 @@
 	        <property name="connection.password">012345679</property>
 	        
 	        <mapping class="giaovusinhvien.entity.Lop" />
+	        <mapping class="giaovusinhvien.entity.Mon" />
+	        <mapping class="giaovusinhvien.entity.SinhVien" />
+	        <mapping class="giaovusinhvien.entity.BangDiem" />
+	        <mapping class="giaovusinhvien.entity.GiaoVu" />
 	    </session-factory>
 	</hibernate-configuration>
