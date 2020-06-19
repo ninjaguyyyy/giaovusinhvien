@@ -20,6 +20,8 @@ public class SinhVien {
    private String gioiTinh;
     @Column(name = "cmnd")
    private int cmnd;
+    @Column(name = "pass")
+    private String pass;
     @ManyToOne
     @JoinColumn(name="id_lop")
     private Lop lop;
@@ -35,7 +37,15 @@ public class SinhVien {
     public SinhVien() {
     }
 
-    public int getIdSV() {
+    public String getPass() {
+		return pass;
+	}
+
+	public void setPass(String pass) {
+		this.pass = pass;
+	}
+
+	public int getIdSV() {
         return idSV;
     }
 
