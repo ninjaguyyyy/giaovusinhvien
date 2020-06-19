@@ -8,23 +8,22 @@ import javax.persistence.*;
 @Table(name = "mon")
 public class Mon {
     @Id @GeneratedValue
-   @Column(name = "id_mon")
-   private int idMon;
+    @Column(name = "id_mon")
+    private int idMon;
     
     @Column(name = "tenmon")
-   private String tenMon;
+    private String tenMon;
+    
     @Column(name = "phong")
-   private String phong;
+    private String phong;
+    
     @Column(name = "mamon")
-   private String maMon;
+    private String maMon;
     
     @ManyToOne
     @JoinColumn(name="id_lop")
     private Lop lop;
     
-    @ManyToMany(mappedBy = "listMon")
-    private List<SinhVien> listSinhVien; 
-
     public Mon() {
     }
 
@@ -66,14 +65,6 @@ public class Mon {
 
     public void setLop(Lop lop) {
         this.lop = lop;
-    }
-
-    public List<SinhVien> getListSinhVien() {
-        return listSinhVien;
-    }
-
-    public void setListSinhVien(List<SinhVien> listSinhVien) {
-        this.listSinhVien = listSinhVien;
     }
     
 }
