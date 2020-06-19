@@ -8,6 +8,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import giaovusinhvien.entity.GiaoVu;
 import giaovusinhvien.entity.Lop;
 import giaovusinhvien.helpers.HibernateUtils;
 
@@ -26,5 +27,22 @@ public class LopDAO {
             session.close();
         }
         return ds;
+    }
+	public static Lop getByClassName(String tenLop) {
+        
+        Session session = HibernateUtils.getSessionFactory()
+                .openSession();
+        try {
+            String hql = "FROM Lop l WHERE l.tenLop = :tenLop";
+            Lop lop = (Lop) session.createQuery(hql).setParameter("tenLop", tenLop).uniqueResult();
+            if(lop != null) {
+            	return lop;
+            }
+        } catch (HibernateException ex) {
+            System.out.println(ex);
+        } finally {
+            session.close();
+        }
+        return null;
     }
 }

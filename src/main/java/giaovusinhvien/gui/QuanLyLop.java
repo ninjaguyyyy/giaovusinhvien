@@ -71,6 +71,14 @@ public class QuanLyLop extends JFrame {
 		setContentPane(contentPane);
 		
 		
+
+		final JComboBox<String> comboBox = new JComboBox<String>(classesName);
+		comboBox.setSelectedIndex(0);
+		comboBox.addActionListener (new ActionListener () {
+		    public void actionPerformed(ActionEvent e) {
+		        classChosen = (String) comboBox.getSelectedItem();
+		    }
+		});
 		
 		final JLabel lblMessage = new JLabel("");
 		JButton btnOpenFile = new JButton("Import csv data");
@@ -82,7 +90,7 @@ public class QuanLyLop extends JFrame {
 					fileChoosen = openFileChooser.getSelectedFile();
 					lblMessage.setText("Chọn file thành công");
 					try {
-						boolean isSuccess = ImporterData.importLop(fileChoosen);
+						boolean isSuccess = ImporterData.importLop(fileChoosen, classChosen);
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -97,14 +105,6 @@ public class QuanLyLop extends JFrame {
 		
 		JLabel lblNewLabel_1 = new JLabel("Chọn lớp");
 		
-		final JComboBox<String> comboBox = new JComboBox<String>(classesName);
-		comboBox.setSelectedIndex(0);
-		comboBox.addActionListener (new ActionListener () {
-		    public void actionPerformed(ActionEvent e) {
-		        classChosen = (String) comboBox.getSelectedItem();
-		        System.out.println(classChosen);
-		    }
-		});
 		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
