@@ -10,8 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import giaovusinhvien.dao.LopDAO;
+import giaovusinhvien.dao.MonHocDAO;
 import giaovusinhvien.dao.SinhVienDAO;
 import giaovusinhvien.entity.Lop;
+import giaovusinhvien.entity.Mon;
 import giaovusinhvien.entity.SinhVien;
 
 public class ImporterData {
@@ -41,6 +43,29 @@ public class ImporterData {
             listSv.add(sv);
         }
 	    SinhVienDAO.addMany(listSv);
+		return true;
+	}
+	
+	public static boolean importMon(File fileInput, String tenLop) throws IOException {
+		Lop lop = LopDAO.getByClassName(tenLop);
+		List<Mon> listMon = new ArrayList<Mon>();
+		inputFile = new BufferedReader(
+	            new InputStreamReader(
+	                new FileInputStream(fileInput), StandardCharsets.UTF_8
+	            )
+	    );
+	    String line;
+	    line = inputFile.readLine();
+	    while ((line = inputFile.readLine()) != null) {
+            String[] splitedLine = line.split(",");
+            Mon mon = new Mon();
+            mon.setMaMon(splitedLine[1]);
+            mon.setTenMon(splitedLine[2]);
+            mon.setPhong(splitedLine[3]);
+            mon.setLop(lop);
+            listMon.add(mon);
+        }
+	    MonHocDAO.addMany(listMon);
 		return true;
 	}
 }
