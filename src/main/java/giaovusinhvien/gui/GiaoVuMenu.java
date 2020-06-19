@@ -12,6 +12,10 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.JLabel;
 
 public class GiaoVuMenu extends JFrame {
 
@@ -38,7 +42,7 @@ public class GiaoVuMenu extends JFrame {
 	 */
 	public GiaoVuMenu() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 727, 450);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -46,38 +50,69 @@ public class GiaoVuMenu extends JFrame {
 		
 		JPanel panel = new JPanel();
 		contentPane.add(panel, BorderLayout.CENTER);
-		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[]{73, 89, 89, 89, 0};
-		gbl_panel.rowHeights = new int[]{23, 0};
-		gbl_panel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{0.0, Double.MIN_VALUE};
-		panel.setLayout(gbl_panel);
 		
-		JButton btnNewButton_2 = new JButton("Qua\u0309n ly\u0301 l\u01A1\u0301p");
-		btnNewButton_2.addActionListener(new ActionListener() {
+		JButton btnManageClass = new JButton("Qua\u0309n ly\u0301 l\u01A1\u0301p");
+		btnManageClass.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new QuanLyLop().setVisible(true);
+		    	setVisible(false);
+			}
+		});
+		
+		JButton btnManageSub = new JButton("Qua\u0309n ly\u0301 m\u00F4n ho\u0323c");
+		btnManageSub.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		GridBagConstraints gbc_btnNewButton_2 = new GridBagConstraints();
-		gbc_btnNewButton_2.insets = new Insets(0, 0, 0, 5);
-		gbc_btnNewButton_2.gridx = 1;
-		gbc_btnNewButton_2.gridy = 0;
-		panel.add(btnNewButton_2, gbc_btnNewButton_2);
 		
-		JButton btnNewButton_1 = new JButton("Qua\u0309n ly\u0301 m\u00F4n ho\u0323c");
-		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
-		gbc_btnNewButton_1.anchor = GridBagConstraints.NORTHWEST;
-		gbc_btnNewButton_1.insets = new Insets(0, 0, 0, 5);
-		gbc_btnNewButton_1.gridx = 2;
-		gbc_btnNewButton_1.gridy = 0;
-		panel.add(btnNewButton_1, gbc_btnNewButton_1);
+		JButton btnManagePoint = new JButton("Qua\u0309n ly\u0301 \u0111i\u00EA\u0309m");
+		btnManagePoint.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		
-		JButton btnNewButton = new JButton("Qua\u0309n ly\u0301 \u0111i\u00EA\u0309m");
-		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-		gbc_btnNewButton.anchor = GridBagConstraints.NORTHWEST;
-		gbc_btnNewButton.gridx = 3;
-		gbc_btnNewButton.gridy = 0;
-		panel.add(btnNewButton, gbc_btnNewButton);
+		JButton btnLogout = new JButton("\u0110\u0103ng xu\u00E2\u0301t");
+		btnLogout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		
+		JLabel lblMenu = new JLabel("Menu");
+		GroupLayout gl_panel = new GroupLayout(panel);
+		gl_panel.setHorizontalGroup(
+			gl_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel.createSequentialGroup()
+					.addGap(47)
+					.addComponent(btnManageClass)
+					.addPreferredGap(ComponentPlacement.RELATED, 161, Short.MAX_VALUE)
+					.addComponent(btnManageSub)
+					.addGap(134)
+					.addComponent(btnManagePoint)
+					.addGap(64))
+				.addGroup(gl_panel.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(btnLogout)
+					.addContainerGap(464, Short.MAX_VALUE))
+				.addGroup(gl_panel.createSequentialGroup()
+					.addGap(334)
+					.addComponent(lblMenu)
+					.addContainerGap(341, Short.MAX_VALUE))
+		);
+		gl_panel.setVerticalGroup(
+			gl_panel.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_panel.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(btnLogout)
+					.addGap(70)
+					.addComponent(lblMenu)
+					.addPreferredGap(ComponentPlacement.RELATED, 168, Short.MAX_VALUE)
+					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btnManageClass)
+						.addComponent(btnManagePoint)
+						.addComponent(btnManageSub))
+					.addGap(92))
+		);
+		panel.setLayout(gl_panel);
 	}
 
 }

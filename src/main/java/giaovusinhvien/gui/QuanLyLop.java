@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import giaovusinhvien.dao.LopDAO;
+import giaovusinhvien.entity.Lop;
 import giaovusinhvien.helpers.ImporterData;
 
 import javax.swing.GroupLayout;
@@ -18,10 +20,16 @@ import javax.swing.JLabel;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.awt.event.ActionEvent;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.JComboBox;
+import javax.swing.JTable;
+import javax.swing.DefaultComboBoxModel;
 
 public class QuanLyLop extends JFrame {
 
+	private String classChosen;
 	private JPanel contentPane;
 	private final JFileChooser openFileChooser;
 	private File fileChoosen;
@@ -50,8 +58,14 @@ public class QuanLyLop extends JFrame {
 		openFileChooser.setCurrentDirectory(new File("c:\\"));
 		openFileChooser.setFileFilter(new FileNameExtensionFilter("csv", "csv"));
 		
+		final DefaultComboBoxModel<String> classesName = new DefaultComboBoxModel<String>();
+		List<Lop> dsLop = LopDAO.getAll();
+		for(Lop lop: dsLop) {
+			classesName.addElement(lop.getTenLop());
+		}
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 692, 396);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -59,7 +73,7 @@ public class QuanLyLop extends JFrame {
 		
 		
 		final JLabel lblMessage = new JLabel("");
-		JButton btnOpenFile = new JButton("Open File");
+		JButton btnOpenFile = new JButton("Import csv data");
 		btnOpenFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int returnValue = openFileChooser.showOpenDialog(null);
@@ -78,24 +92,51 @@ public class QuanLyLop extends JFrame {
 				}
 			}
 		});
+		
+		JLabel lblNewLabel = new JLabel("Quản lý Lớp - Sinh viên");
+		
+		JLabel lblNewLabel_1 = new JLabel("Chọn lớp");
+		
+		final JComboBox<String> comboBox = new JComboBox<String>(classesName);
+		comboBox.setSelectedIndex(0);
+		comboBox.addActionListener (new ActionListener () {
+		    public void actionPerformed(ActionEvent e) {
+		        classChosen = (String) comboBox.getSelectedItem();
+		        System.out.println(classChosen);
+		    }
+		});
+		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
+					.addGap(281)
+					.addComponent(lblNewLabel)
+					.addContainerGap(275, Short.MAX_VALUE))
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addGap(68)
+					.addComponent(lblNewLabel_1)
+					.addGap(18)
+					.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED, 240, Short.MAX_VALUE)
 					.addComponent(btnOpenFile)
-					.addGap(35)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(lblMessage, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(153, Short.MAX_VALUE))
+					.addGap(2))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(22)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(btnOpenFile)
-						.addComponent(lblMessage, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap(206, Short.MAX_VALUE))
+					.addContainerGap()
+					.addComponent(lblNewLabel)
+					.addGap(20)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblMessage, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+							.addComponent(btnOpenFile)
+							.addComponent(lblNewLabel_1)
+							.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap(279, Short.MAX_VALUE))
 		);
 		contentPane.setLayout(gl_contentPane);
 	}
