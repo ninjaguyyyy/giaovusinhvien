@@ -37,6 +37,7 @@ public class ImporterData {
             sv.setGioiTinh(splitedLine[3]);
             sv.setCmnd(Integer.parseInt(splitedLine[4]));
             sv.setLop(lop);
+            sv.setPass(splitedLine[1]);
             listSv.add(sv);
         }
 	    SinhVienDAO.addMany(listSv);

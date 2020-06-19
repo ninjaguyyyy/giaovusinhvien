@@ -33,6 +33,7 @@ import javax.swing.JTable;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JScrollPane;
 import net.proteanit.sql.DbUtils;
+import javax.swing.JTextField;
 
 public class QuanLyLop extends JFrame {
 
@@ -41,6 +42,9 @@ public class QuanLyLop extends JFrame {
 	private final JFileChooser openFileChooser;
 	private File fileChoosen;
 	private JTable table;
+	private JTextField textFieldMssv;
+	private JTextField textFieldName;
+	private JTextField textFieldCmnd;
 
 	/**
 	 * Launch the application.
@@ -62,6 +66,7 @@ public class QuanLyLop extends JFrame {
 	 * Create the frame.
 	 */
 	public QuanLyLop() {
+		classChosen = "17CTT1";
 		openFileChooser = new JFileChooser();
 		openFileChooser.setCurrentDirectory(new File("c:\\"));
 		openFileChooser.setFileFilter(new FileNameExtensionFilter("csv", "csv"));
@@ -73,7 +78,7 @@ public class QuanLyLop extends JFrame {
 		}
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 692, 396);
+		setBounds(100, 100, 846, 445);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -111,23 +116,44 @@ public class QuanLyLop extends JFrame {
 		JLabel lblNewLabel_1 = new JLabel("Chọn lớp");
 		
 		JButton btnAdd = new JButton("Thêm sinh viên");
-		btnAdd.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				SinhVien newSv = new SinhVien();
-				newSv.setMssv(1712299);
-				newSv.setHoTen("Nguyễn Hữu Chí");
-				newSv.setGioiTinh("Male");
-				newSv.setCmnd(212840552);
-				newSv.setLop(LopDAO.getByClassName("17CTT2"));
-				SinhVienDAO.add(newSv);
-			}
-		});
+		
 		
 		
 		JScrollPane scrollPane = new JScrollPane();
 		
+		JLabel lblMssv = new JLabel("Mssv");
+		
+		textFieldMssv = new JTextField();
+		textFieldMssv.setColumns(10);
+		
+		JLabel lblGender = new JLabel("Giới tính");
+		
+		JLabel lblName = new JLabel("Họ tên");
+		
+		textFieldName = new JTextField();
+		textFieldName.setColumns(10);
+		
+		JLabel lblCmnd = new JLabel("Cmnd");
+		
+		textFieldCmnd = new JTextField();
+		textFieldCmnd.setColumns(10);
+		
+		final JComboBox comboBoxGender = new JComboBox();
+		comboBoxGender.setModel(new DefaultComboBoxModel(new String[] {"Nam", "Nữ"}));
 		
 		
+		btnAdd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SinhVien newSv = new SinhVien();
+				newSv.setMssv(Integer.parseInt(textFieldMssv.getText()));
+				newSv.setHoTen(textFieldName.getText());
+				newSv.setGioiTinh(comboBoxGender.getSelectedItem().toString());
+				newSv.setCmnd(Integer.parseInt(textFieldCmnd.getText()));
+				newSv.setLop(LopDAO.getByClassName(classChosen));
+				newSv.setPass(textFieldMssv.getText());
+				SinhVienDAO.add(newSv);
+			}
+		});
 		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
@@ -135,20 +161,36 @@ public class QuanLyLop extends JFrame {
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGap(281)
 					.addComponent(lblNewLabel)
-					.addContainerGap(275, Short.MAX_VALUE))
+					.addContainerGap(429, Short.MAX_VALUE))
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGap(31)
+					.addComponent(lblNewLabel_1)
+					.addGap(18)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(lblNewLabel_1)
-							.addGap(18)
-							.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addGap(54)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblMssv)
+								.addComponent(lblName))
+							.addGap(23)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(textFieldMssv, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(textFieldName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addGap(32)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblCmnd)
+								.addComponent(lblGender))
+							.addGap(29)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(comboBoxGender, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(textFieldCmnd, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
 						.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 458, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
+					.addGap(53)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(btnOpenFile)
-						.addComponent(btnAdd))
-					.addGap(19))
+						.addComponent(btnAdd)
+						.addComponent(btnOpenFile))
+					.addGap(109))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -158,14 +200,28 @@ public class QuanLyLop extends JFrame {
 					.addGap(20)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblNewLabel_1)
-						.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGap(9)
-					.addComponent(btnOpenFile)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
+						.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblMssv)
+						.addComponent(textFieldMssv, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblGender)
+						.addComponent(comboBoxGender, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblName)
+						.addComponent(textFieldName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblCmnd)
+						.addComponent(textFieldCmnd, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(btnAdd)
-						.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 202, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap(37, Short.MAX_VALUE))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(36)
+							.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 202, GroupLayout.PREFERRED_SIZE)
+							.addContainerGap(55, Short.MAX_VALUE))
+						.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+							.addGap(93)
+							.addComponent(btnOpenFile)
+							.addGap(34)
+							.addComponent(btnAdd)
+							.addGap(120))))
 		);
 		
 		table = new JTable();
