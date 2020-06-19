@@ -3,6 +3,7 @@ package giaovusinhvien.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -11,7 +12,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "monhoc_sinhvien")
 public class SV_Mon {
-		@Id @GeneratedValue
+	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 		@Column(name = "id_chitiet")
 		private int idSV_Mon;
 		

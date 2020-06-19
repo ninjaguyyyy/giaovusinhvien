@@ -9,7 +9,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import giaovusinhvien.dao.LopDAO;
+import giaovusinhvien.dao.SinhVienDAO;
 import giaovusinhvien.entity.Lop;
+import giaovusinhvien.entity.SinhVien;
 import giaovusinhvien.helpers.ImporterData;
 
 import javax.swing.GroupLayout;
@@ -105,6 +107,19 @@ public class QuanLyLop extends JFrame {
 		
 		JLabel lblNewLabel_1 = new JLabel("Chọn lớp");
 		
+		JButton btnAdd = new JButton("Thêm sinh viên");
+		btnAdd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SinhVien newSv = new SinhVien();
+				newSv.setMssv(1712299);
+				newSv.setHoTen("Nguyễn Hữu Chí");
+				newSv.setGioiTinh("Male");
+				newSv.setCmnd(212840552);
+				newSv.setLop(LopDAO.getByClassName("17CTT2"));
+				SinhVienDAO.add(newSv);
+			}
+		});
+		
 		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
@@ -123,6 +138,10 @@ public class QuanLyLop extends JFrame {
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(lblMessage, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
 					.addGap(2))
+				.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+					.addContainerGap(567, Short.MAX_VALUE)
+					.addComponent(btnAdd)
+					.addContainerGap())
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -136,7 +155,9 @@ public class QuanLyLop extends JFrame {
 							.addComponent(btnOpenFile)
 							.addComponent(lblNewLabel_1)
 							.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-					.addContainerGap(279, Short.MAX_VALUE))
+					.addGap(43)
+					.addComponent(btnAdd)
+					.addContainerGap(213, Short.MAX_VALUE))
 		);
 		contentPane.setLayout(gl_contentPane);
 	}

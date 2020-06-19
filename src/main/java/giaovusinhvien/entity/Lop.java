@@ -5,7 +5,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "lop")
 public class Lop {
-    @Id @GeneratedValue
+	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
    @Column(name = "id_lop")
    private int idLop;
     

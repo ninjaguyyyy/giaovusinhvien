@@ -17,5 +17,6 @@
 	        <mapping class="giaovusinhvien.entity.SinhVien" />
 	        <mapping class="giaovusinhvien.entity.BangDiem" />
 	        <mapping class="giaovusinhvien.entity.GiaoVu" />
+	        <mapping class="giaovusinhvien.entity.SV_Mon" />
 	    </session-factory>
 	</hibernate-configuration>

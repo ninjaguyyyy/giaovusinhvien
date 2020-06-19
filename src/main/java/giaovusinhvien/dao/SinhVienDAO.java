@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import giaovusinhvien.entity.Lop;
@@ -20,6 +21,21 @@ public class SinhVienDAO {
         	  session.save(sv);
         	}
         } catch (HibernateException ex) {
+            System.out.println(ex);
+        } finally {
+            session.close();
+        }
+    }
+	public static void add(SinhVien sv) {
+        Session session = HibernateUtils.getSessionFactory()
+                .openSession();
+        Transaction transaction = null;
+        try {
+        	transaction = session.beginTransaction();
+        	session.save(sv);
+        	transaction.commit();
+        } catch (HibernateException ex) {
+        	transaction.rollback();
             System.out.println(ex);
         } finally {
             session.close();
