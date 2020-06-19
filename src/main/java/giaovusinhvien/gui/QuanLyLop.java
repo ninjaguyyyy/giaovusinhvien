@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
 
 import giaovusinhvien.dao.LopDAO;
 import giaovusinhvien.dao.SinhVienDAO;
@@ -19,6 +20,8 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +31,8 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JScrollPane;
+import net.proteanit.sql.DbUtils;
 
 public class QuanLyLop extends JFrame {
 
@@ -35,6 +40,7 @@ public class QuanLyLop extends JFrame {
 	private JPanel contentPane;
 	private final JFileChooser openFileChooser;
 	private File fileChoosen;
+	private JTable table;
 
 	/**
 	 * Launch the application.
@@ -81,8 +87,6 @@ public class QuanLyLop extends JFrame {
 		        classChosen = (String) comboBox.getSelectedItem();
 		    }
 		});
-		
-		final JLabel lblMessage = new JLabel("");
 		JButton btnOpenFile = new JButton("Import csv data");
 		btnOpenFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -90,7 +94,6 @@ public class QuanLyLop extends JFrame {
 				
 				if(returnValue == JFileChooser.APPROVE_OPTION) {
 					fileChoosen = openFileChooser.getSelectedFile();
-					lblMessage.setText("Chọn file thành công");
 					try {
 						boolean isSuccess = ImporterData.importLop(fileChoosen, classChosen);
 					} catch (IOException e1) {
@@ -98,7 +101,7 @@ public class QuanLyLop extends JFrame {
 						e1.printStackTrace();
 					}
 				} else {
-					lblMessage.setText("Chưa chọn file");
+					JOptionPane.showMessageDialog(null, "Chưa chọn file");
 				}
 			}
 		});
@@ -121,27 +124,31 @@ public class QuanLyLop extends JFrame {
 		});
 		
 		
+		JScrollPane scrollPane = new JScrollPane();
+		
+		
+		
+		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGap(281)
 					.addComponent(lblNewLabel)
 					.addContainerGap(275, Short.MAX_VALUE))
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(68)
-					.addComponent(lblNewLabel_1)
-					.addGap(18)
-					.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 240, Short.MAX_VALUE)
-					.addComponent(btnOpenFile)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(lblMessage, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
-					.addGap(2))
-				.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
-					.addContainerGap(567, Short.MAX_VALUE)
-					.addComponent(btnAdd)
-					.addContainerGap())
+					.addGap(31)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(lblNewLabel_1)
+							.addGap(18)
+							.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 458, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(btnOpenFile)
+						.addComponent(btnAdd))
+					.addGap(19))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -149,16 +156,25 @@ public class QuanLyLop extends JFrame {
 					.addContainerGap()
 					.addComponent(lblNewLabel)
 					.addGap(20)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblNewLabel_1)
+						.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(9)
+					.addComponent(btnOpenFile)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblMessage, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE)
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-							.addComponent(btnOpenFile)
-							.addComponent(lblNewLabel_1)
-							.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-					.addGap(43)
-					.addComponent(btnAdd)
-					.addContainerGap(213, Short.MAX_VALUE))
+						.addComponent(btnAdd)
+						.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 202, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap(37, Short.MAX_VALUE))
 		);
+		
+		table = new JTable();
+		scrollPane.setViewportView(table);
 		contentPane.setLayout(gl_contentPane);
+		DefaultTableModel defaultTableModel = new DefaultTableModel();
+		defaultTableModel.addColumn("MSSV");
+		defaultTableModel.addColumn("Họ tên");
+		defaultTableModel.addColumn("Giới tính");
+		defaultTableModel.addColumn("CMND");
 	}
 }

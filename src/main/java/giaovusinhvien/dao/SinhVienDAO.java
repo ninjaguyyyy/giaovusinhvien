@@ -1,5 +1,6 @@
 package giaovusinhvien.dao;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,5 +41,20 @@ public class SinhVienDAO {
         } finally {
             session.close();
         }
+    }
+	public static ResultSet getAll() {
+        Session session = HibernateUtils.getSessionFactory()
+                .openSession();
+        ResultSet ds = null;
+        try {
+            String hql = "FROM SinhVien";
+            Query query = session.createQuery(hql);
+             ds = (ResultSet) query.list(); 
+        } catch (HibernateException ex) {
+            System.out.println(ex);
+        } finally {
+            session.close();
+        }
+        return ds;
     }
 }
