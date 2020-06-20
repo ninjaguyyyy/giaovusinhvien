@@ -62,18 +62,24 @@ public class GiaoVuMenu extends JFrame {
 		JButton btnManageSub = new JButton("Qua\u0309n ly\u0301 m\u00F4n ho\u0323c");
 		btnManageSub.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				new QuanLyMonHoc().setVisible(true);
+		    	setVisible(false);
 			}
 		});
 		
 		JButton btnManagePoint = new JButton("Qua\u0309n ly\u0301 \u0111i\u00EA\u0309m");
 		btnManagePoint.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				new QuanLyDiem().setVisible(true);
+		    	setVisible(false);
 			}
 		});
 		
 		JButton btnLogout = new JButton("\u0110\u0103ng xu\u00E2\u0301t");
 		btnLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+				new Login().setVisible(true);
 			}
 		});
 		
