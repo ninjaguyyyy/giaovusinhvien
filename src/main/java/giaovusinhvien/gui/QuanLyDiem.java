@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -212,10 +213,13 @@ public class QuanLyDiem extends JFrame {
 					}
 				}
 				double ratePass = (passCount*1.0/total)*100;
+				DecimalFormat f = new DecimalFormat("##.00");
+			     String ratePassString = f.format(ratePass);
+			     String rateFailString = f.format(100 - ratePass);
 				JOptionPane.showMessageDialog(
 						null, 
-						"Tổng: " + total + "\nĐậu: " + passCount + " (" + ratePass + "%)"
-						+ "\nRớt: " + (total - passCount) + " (" + (100 - ratePass) + "%)"
+						"Tổng: " + total + "\nĐậu: " + passCount + " (" + ratePassString + "%)"
+						+ "\nRớt: " + (total - passCount) + " (" + rateFailString + "%)"
 				);
 			}
 		});
