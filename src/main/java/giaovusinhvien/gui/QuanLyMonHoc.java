@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
@@ -26,8 +27,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 import giaovusinhvien.dao.LopDAO;
+import giaovusinhvien.dao.MonHocDAO;
 import giaovusinhvien.dao.SinhVienDAO;
 import giaovusinhvien.entity.Lop;
+import giaovusinhvien.entity.Mon;
 import giaovusinhvien.entity.SinhVien;
 import giaovusinhvien.helpers.ImporterData;
 
@@ -37,6 +40,7 @@ public class QuanLyMonHoc extends JFrame {
 	private final JFileChooser openFileChooser;
 	private File fileChoosen;
 	private JTable table;
+	private List<Mon> listMon;
 	
 	private JPanel contentPane;
 
@@ -59,8 +63,22 @@ public class QuanLyMonHoc extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	String[][] data = new String[0][4];
 	public QuanLyMonHoc() {
 		classChosen = "17CTT1";
+		listMon = new ArrayList<Mon>();
+		List<Mon> getListMon = MonHocDAO.getByClass(classChosen);
+		for(Mon mon: getListMon) {
+			listMon.add(mon);
+		}
+		data = new String[listMon.size()][4];
+        for (int i = 0; i < listMon.size(); i++){
+            data[i][0] = String.valueOf(i+1);
+            data[i][1] = String.valueOf(listMon.get(i).getMaMon());
+            data[i][2] = listMon.get(i).getTenMon();
+            data[i][3] = listMon.get(i).getPhong();
+        }
+		
 		openFileChooser = new JFileChooser();
 		openFileChooser.setCurrentDirectory(new File("c:\\"));
 		openFileChooser.setFileFilter(new FileNameExtensionFilter("csv", "csv"));
@@ -84,6 +102,21 @@ public class QuanLyMonHoc extends JFrame {
 		comboBox.addActionListener (new ActionListener () {
 		    public void actionPerformed(ActionEvent e) {
 		        classChosen = (String) comboBox.getSelectedItem();
+		        listMon.removeAll(listMon);
+		        List<Mon> getListMon = MonHocDAO.getByClass(classChosen);
+				for(Mon mon: getListMon) {
+					listMon.add(mon);
+				}
+		        data = new String[listMon.size()][5];
+		        for (int i = 0; i < listMon.size(); i++){
+		            data[i][0] = String.valueOf(i+1);
+		            data[i][1] = String.valueOf(listMon.get(i).getMaMon());
+		            data[i][2] = listMon.get(i).getTenMon();
+		            data[i][3] = listMon.get(i).getPhong();
+		        }
+		        table.setModel(new DefaultTableModel(data, new String [] {
+		                "STT", "Mã môn", "Tên môn", "Phòng học"
+	            }));
 		    }
 		});
 		JButton btnOpenFile = new JButton("Import csv data");
@@ -152,14 +185,14 @@ public class QuanLyMonHoc extends JFrame {
 							.addGap(177))))
 		);
 		
+		DefaultTableModel defaultTableModel = new DefaultTableModel(data, new String [] {
+                "STT", "Mã môn", "Tên môn", "Phòng học"
+            });
 		table = new JTable();
+		table.setModel(defaultTableModel);
+		
 		scrollPane.setViewportView(table);
 		contentPane.setLayout(gl_contentPane);
-		DefaultTableModel defaultTableModel = new DefaultTableModel();
-		defaultTableModel.addColumn("MSSV");
-		defaultTableModel.addColumn("Họ tên");
-		defaultTableModel.addColumn("Giới tính");
-		defaultTableModel.addColumn("CMND");
 		
 		
 	}
