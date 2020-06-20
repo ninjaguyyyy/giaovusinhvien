@@ -26,8 +26,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 import giaovusinhvien.dao.LopDAO;
+import giaovusinhvien.dao.MonHocDAO;
 import giaovusinhvien.dao.SinhVienDAO;
 import giaovusinhvien.entity.Lop;
+import giaovusinhvien.entity.Mon;
 import giaovusinhvien.entity.SinhVien;
 import giaovusinhvien.helpers.ImporterData;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -35,16 +37,17 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 public class QuanLyDiem extends JFrame {
 
 	private String classChosen;
+	private String subChosen;
 	private JPanel contentPane;
 	private final JFileChooser openFileChooser;
 	private File fileChoosen;
 	private JTable table;
 	private JTextField textFieldMssv;
 	private JTextField textFieldName;
-	private JTextField textFieldCmnd;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
+	private JTextField textFieldGk;
+	private JTextField textFieldCk;
+	private JTextField textFieldKhac;
+	private JTextField textFieldTong;
 	/**
 	 * Launch the application.
 	 */
@@ -76,6 +79,12 @@ public class QuanLyDiem extends JFrame {
 			classesName.addElement(lop.getTenLop());
 		}
 		
+		final DefaultComboBoxModel<String> subsName = new DefaultComboBoxModel<String>();
+		List<Mon> dsMon = MonHocDAO.getByClass(classChosen);
+		for(Mon mon: dsMon) {
+			subsName.addElement(mon.getTenMon());
+		}
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 846, 445);
 		contentPane = new JPanel();
@@ -89,8 +98,22 @@ public class QuanLyDiem extends JFrame {
 		comboBox.addActionListener (new ActionListener () {
 		    public void actionPerformed(ActionEvent e) {
 		        classChosen = (String) comboBox.getSelectedItem();
+		        subsName.removeAllElements();
+		        List<Mon> dsMon = MonHocDAO.getByClass(classChosen);
+		        for(Mon mon: dsMon) {
+					subsName.addElement(mon.getTenMon());
+				}
 		    }
 		});
+		
+		final JComboBox<String> comboBoxSub = new JComboBox<String>(subsName);
+		comboBoxSub.setSelectedIndex(0);
+		comboBoxSub.addActionListener (new ActionListener () {
+		    public void actionPerformed(ActionEvent e) {
+		        subChosen = (String) comboBoxSub.getSelectedItem();
+		    }
+		});
+		
 		JButton btnOpenFile = new JButton("Import csv data");
 		btnOpenFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -132,8 +155,8 @@ public class QuanLyDiem extends JFrame {
 		
 		JLabel lblPoint = new JLabel("Điểm");
 		
-		textFieldCmnd = new JTextField();
-		textFieldCmnd.setColumns(10);
+		textFieldGk = new JTextField();
+		textFieldGk.setColumns(10);
 		
 		
 		btnThongKe.addActionListener(new ActionListener() {
@@ -142,26 +165,26 @@ public class QuanLyDiem extends JFrame {
 			}
 		});
 		
-		textField = new JTextField();
-		textField.setColumns(10);
+		textFieldCk = new JTextField();
+		textFieldCk.setColumns(10);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
+		textFieldKhac = new JTextField();
+		textFieldKhac.setColumns(10);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
+		textFieldTong = new JTextField();
+		textFieldTong.setColumns(10);
 		
-		JLabel lblNewLabel_2 = new JLabel("GK");
+		JLabel lblGk = new JLabel("GK");
 		
-		JLabel lblNewLabel_3 = new JLabel("CK");
+		JLabel lblCk = new JLabel("CK");
 		
-		JLabel lblNewLabel_4 = new JLabel("Khác");
+		JLabel lblKhac = new JLabel("Khác");
 		
-		JLabel lblNewLabel_5 = new JLabel("Tổng");
+		JLabel lblTong = new JLabel("Tổng");
 		
 		JLabel lblSub = new JLabel("Chọn môn");
 		
-		JComboBox comboBoxSub = new JComboBox();
+		
 		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
@@ -171,6 +194,7 @@ public class QuanLyDiem extends JFrame {
 					.addComponent(lblNewLabel)
 					.addContainerGap(429, Short.MAX_VALUE))
 				.addGroup(gl_contentPane.createSequentialGroup()
+					.addGap(31)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -192,38 +216,35 @@ public class QuanLyDiem extends JFrame {
 										.addGroup(gl_contentPane.createSequentialGroup()
 											.addComponent(textFieldMssv, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 											.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-											.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE))
+											.addComponent(lblGk, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE))
 										.addGroup(gl_contentPane.createSequentialGroup()
 											.addComponent(textFieldName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 											.addGap(31)
 											.addComponent(lblPoint)
 											.addPreferredGap(ComponentPlacement.UNRELATED)
-											.addComponent(textFieldCmnd, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)))
+											.addComponent(textFieldGk, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)))
 									.addGap(14)
 									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-										.addComponent(textField, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-										.addComponent(lblNewLabel_3))
+										.addComponent(textFieldCk, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
+										.addComponent(lblCk))
 									.addPreferredGap(ComponentPlacement.UNRELATED)
 									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 										.addGroup(gl_contentPane.createSequentialGroup()
-											.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+											.addComponent(textFieldKhac, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
 											.addPreferredGap(ComponentPlacement.UNRELATED)
-											.addComponent(textField_2, GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE))
+											.addComponent(textFieldTong, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE))
 										.addGroup(gl_contentPane.createSequentialGroup()
-											.addComponent(lblNewLabel_4)
+											.addComponent(lblKhac)
 											.addGap(18)
-											.addComponent(lblNewLabel_5)))
-									.addGap(41))
+											.addComponent(lblTong))))
 								.addGroup(gl_contentPane.createSequentialGroup()
 									.addGap(50)
-									.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 458, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED)))
-							.addGap(77))
+									.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 458, GroupLayout.PREFERRED_SIZE)))
+							.addGap(109))
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(544)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(btnThongKe)
-								.addComponent(btnOpenFile))
+								.addComponent(btnOpenFile)
+								.addComponent(btnThongKe))
 							.addGap(32)))
 					.addGap(135))
 		);
@@ -249,23 +270,23 @@ public class QuanLyDiem extends JFrame {
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGap(18)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblNewLabel_2)
-								.addComponent(lblNewLabel_3)
-								.addComponent(lblNewLabel_4)
-								.addComponent(lblNewLabel_5))
+								.addComponent(lblGk)
+								.addComponent(lblCk)
+								.addComponent(lblKhac)
+								.addComponent(lblTong))
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 								.addComponent(lblPoint)
-								.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(textField_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(textFieldCmnd, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
+								.addComponent(textFieldCk, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(textFieldKhac, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(textFieldTong, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(textFieldGk, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
 					.addGap(38)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 						.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 202, GroupLayout.PREFERRED_SIZE)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addComponent(btnOpenFile)
-							.addGap(23)
+							.addGap(19)
 							.addComponent(btnThongKe)))
 					.addGap(53))
 		);

@@ -9,9 +9,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import giaovusinhvien.dao.BangDiemDAO;
 import giaovusinhvien.dao.LopDAO;
 import giaovusinhvien.dao.MonHocDAO;
 import giaovusinhvien.dao.SinhVienDAO;
+import giaovusinhvien.entity.BangDiem;
 import giaovusinhvien.entity.Lop;
 import giaovusinhvien.entity.Mon;
 import giaovusinhvien.entity.SinhVien;
@@ -66,6 +68,34 @@ public class ImporterData {
             listMon.add(mon);
         }
 	    MonHocDAO.addMany(listMon);
+		return true;
+	}
+	
+	public static boolean importDiem(File fileInput, String tenLop, String tenMon) throws IOException {
+		Lop lop = LopDAO.getByClassName(tenLop);
+		Mon mon = MonHocDAO.getBySubName(tenMon);
+		List<BangDiem> listDiem = new ArrayList<BangDiem>();
+		inputFile = new BufferedReader(
+	            new InputStreamReader(
+	                new FileInputStream(fileInput), StandardCharsets.UTF_8
+	            )
+	    );
+	    String line;
+	    line = inputFile.readLine();
+	    while ((line = inputFile.readLine()) != null) {
+            String[] splitedLine = line.split(",");
+            BangDiem diem = new BangDiem();
+            String mssv = splitedLine[1];
+            SinhVien sv = SinhVienDAO.getByMssv(mssv);
+            diem.setSv(sv);
+            diem.setGiuaKi(Double.parseDouble(splitedLine[3]));
+            diem.setCuoiKi(Double.parseDouble(splitedLine[4]));
+            diem.setDiemkhac(Double.parseDouble(splitedLine[5]));
+            diem.setDiemtong(Double.parseDouble(splitedLine[6]));
+            diem.setMon(mon);
+            listDiem.add(diem);
+        }
+	    BangDiemDAO.addMany(listDiem);
 		return true;
 	}
 }
