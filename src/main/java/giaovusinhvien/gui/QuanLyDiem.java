@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
@@ -25,9 +26,11 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
+import giaovusinhvien.dao.BangDiemDAO;
 import giaovusinhvien.dao.LopDAO;
 import giaovusinhvien.dao.MonHocDAO;
 import giaovusinhvien.dao.SinhVienDAO;
+import giaovusinhvien.entity.BangDiem;
 import giaovusinhvien.entity.Lop;
 import giaovusinhvien.entity.Mon;
 import giaovusinhvien.entity.SinhVien;
@@ -48,6 +51,8 @@ public class QuanLyDiem extends JFrame {
 	private JTextField textFieldCk;
 	private JTextField textFieldKhac;
 	private JTextField textFieldTong;
+	
+	private List<BangDiem> listDiem;
 	/**
 	 * Launch the application.
 	 */
@@ -67,8 +72,26 @@ public class QuanLyDiem extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	String[][] data = new String[0][7];
 	public QuanLyDiem() {
 		classChosen = "17CTT1";
+		
+		listDiem = new ArrayList<BangDiem>();
+		List<BangDiem> getListDiem = BangDiemDAO.getBySub(subChosen);
+		for(BangDiem diem: getListDiem) {
+			listDiem.add(diem);
+		}
+		data = new String[listDiem.size()][7];
+        for (int i = 0; i < listDiem.size(); i++){
+            data[i][0] = String.valueOf(i+1);
+            data[i][1] = String.valueOf(listDiem.get(i).getSv().getMssv());
+            data[i][2] = listDiem.get(i).getSv().getHoTen();
+            data[i][3] = String.valueOf(listDiem.get(i).getGiuaKi());
+            data[i][4] = String.valueOf(listDiem.get(i).getCuoiKi());
+            data[i][5] = String.valueOf(listDiem.get(i).getDiemkhac());
+            data[i][6] = String.valueOf(listDiem.get(i).getDiemtong());
+        }
+        
 		openFileChooser = new JFileChooser();
 		openFileChooser.setCurrentDirectory(new File("c:\\"));
 		openFileChooser.setFileFilter(new FileNameExtensionFilter("csv", "csv"));
@@ -111,6 +134,24 @@ public class QuanLyDiem extends JFrame {
 		comboBoxSub.addActionListener (new ActionListener () {
 		    public void actionPerformed(ActionEvent e) {
 		        subChosen = (String) comboBoxSub.getSelectedItem();
+		        listDiem.removeAll(listDiem);
+		        List<BangDiem> getListDiem = BangDiemDAO.getBySub(subChosen);
+				for(BangDiem diem: getListDiem) {
+					listDiem.add(diem);
+				}
+		        data = new String[listDiem.size()][7];
+		        for (int i = 0; i < listDiem.size(); i++){
+		            data[i][0] = String.valueOf(i+1);
+		            data[i][1] = String.valueOf(listDiem.get(i).getSv().getMssv());
+		            data[i][2] = listDiem.get(i).getSv().getHoTen();
+		            data[i][3] = String.valueOf(listDiem.get(i).getGiuaKi());
+		            data[i][4] = String.valueOf(listDiem.get(i).getCuoiKi());
+		            data[i][5] = String.valueOf(listDiem.get(i).getDiemkhac());
+		            data[i][6] = String.valueOf(listDiem.get(i).getDiemtong());
+		        }
+		        table.setModel(new DefaultTableModel(data, new String [] {
+		                "STT", "MSSV", "Họ tên", "Điểm GK", "Điểm CK", "Điểm khác", "Điểm tổng",
+	            }));
 		    }
 		});
 		
@@ -291,13 +332,13 @@ public class QuanLyDiem extends JFrame {
 					.addGap(53))
 		);
 		
+		DefaultTableModel defaultTableModel = new DefaultTableModel(data, new String [] {
+                "STT", "MSSV", "Họ tên", "Điểm GK", "Điểm CK", "Điểm khác", "Điểm tổng",
+            });
 		table = new JTable();
+		table.setModel(defaultTableModel);
+		
 		scrollPane.setViewportView(table);
 		contentPane.setLayout(gl_contentPane);
-		DefaultTableModel defaultTableModel = new DefaultTableModel();
-		defaultTableModel.addColumn("MSSV");
-		defaultTableModel.addColumn("Họ tên");
-		defaultTableModel.addColumn("Giới tính");
-		defaultTableModel.addColumn("CMND");
 	}
 }
