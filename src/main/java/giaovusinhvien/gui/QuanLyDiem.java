@@ -24,6 +24,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
@@ -37,6 +39,8 @@ import giaovusinhvien.entity.Mon;
 import giaovusinhvien.entity.SinhVien;
 import giaovusinhvien.helpers.ImporterData;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 
 public class QuanLyDiem extends JFrame {
 
@@ -52,6 +56,7 @@ public class QuanLyDiem extends JFrame {
 	private JTextField textFieldCk;
 	private JTextField textFieldKhac;
 	private JTextField textFieldTong;
+	private int idDiemChosen;
 	
 	private List<BangDiem> listDiem;
 	/**
@@ -73,7 +78,7 @@ public class QuanLyDiem extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	String[][] data = new String[0][8];
+	String[][] data = new String[0][9];
 	public QuanLyDiem() {
 		classChosen = "17CTT1";
 		subChosen = MonHocDAO.getByClass(classChosen).get(0);
@@ -82,7 +87,7 @@ public class QuanLyDiem extends JFrame {
 		for(BangDiem diem: getListDiem) {
 			listDiem.add(diem);
 		}
-		data = new String[listDiem.size()][8];
+		data = new String[listDiem.size()][9];
         for (int i = 0; i < listDiem.size(); i++){
             data[i][0] = String.valueOf(i+1);
             data[i][1] = String.valueOf(listDiem.get(i).getSv().getMssv());
@@ -92,6 +97,7 @@ public class QuanLyDiem extends JFrame {
             data[i][5] = String.valueOf(listDiem.get(i).getDiemkhac());
             data[i][6] = String.valueOf(listDiem.get(i).getDiemtong());
             data[i][7] = String.valueOf(listDiem.get(i).getDiemtong() >= 5 ? "Đậu": "Rớt");
+            data[i][8] = String.valueOf(listDiem.get(i).getIdDiem());
         }
         
 		openFileChooser = new JFileChooser();
@@ -141,7 +147,7 @@ public class QuanLyDiem extends JFrame {
 				for(BangDiem diem: getListDiem) {
 					listDiem.add(diem);
 				}
-		        data = new String[listDiem.size()][8];
+		        data = new String[listDiem.size()][9];
 		        for (int i = 0; i < listDiem.size(); i++){
 		            data[i][0] = String.valueOf(i+1);
 		            data[i][1] = String.valueOf(listDiem.get(i).getSv().getMssv());
@@ -151,9 +157,10 @@ public class QuanLyDiem extends JFrame {
 		            data[i][5] = String.valueOf(listDiem.get(i).getDiemkhac());
 		            data[i][6] = String.valueOf(listDiem.get(i).getDiemtong());
 		            data[i][7] = String.valueOf(listDiem.get(i).getDiemtong() >= 5 ? "Đậu": "Rớt");
+		            data[i][8] = String.valueOf(listDiem.get(i).getIdDiem());
 		        }
 		        table.setModel(new DefaultTableModel(data, new String [] {
-		                "STT", "MSSV", "Họ tên", "Điểm GK", "Điểm CK", "Điểm khác", "Điểm tổng", "Kết quả"
+		                "STT", "MSSV", "Họ tên", "Điểm GK", "Điểm CK", "Điểm khác", "Điểm tổng", "Kết quả", "Id (no care)"
 	            }));
 		    }
 		});
@@ -243,6 +250,33 @@ public class QuanLyDiem extends JFrame {
 		
 		JLabel lblSub = new JLabel("Chọn môn");
 		
+		JButton btnUpdate = new JButton("Cập nhật");
+		btnUpdate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				BangDiem bangdiemCur = BangDiemDAO.getById(idDiemChosen);
+				bangdiemCur.setGiuaKi(Double.parseDouble(textFieldGk.getText()));
+				bangdiemCur.setCuoiKi(Double.parseDouble(textFieldCk.getText()));
+				bangdiemCur.setDiemkhac(Double.parseDouble(textFieldKhac.getText()));
+				bangdiemCur.setDiemtong(Double.parseDouble(textFieldTong.getText()));
+				BangDiemDAO.update(bangdiemCur);
+				
+				
+				int res = JOptionPane.showOptionDialog(null, "Đã cập nhật", "Thông báo", JOptionPane.DEFAULT_OPTION,
+				        JOptionPane.INFORMATION_MESSAGE, null, null, null);
+
+				SwingUtilities.updateComponentTreeUI(QuanLyDiem.this);
+				System.out.println(res);
+			}
+		});
+		
+		JButton btnRefresh = new JButton("Làm mới");
+		btnRefresh.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+				(new QuanLyDiem()).setVisible(true);
+			}
+		});
+		
 		
 		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
@@ -302,8 +336,10 @@ public class QuanLyDiem extends JFrame {
 							.addGap(109))
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(btnThongKe)
 								.addComponent(btnOpenFile)
-								.addComponent(btnThongKe))
+								.addComponent(btnUpdate)
+								.addComponent(btnRefresh))
 							.addGap(32)))
 					.addGap(135))
 		);
@@ -345,18 +381,48 @@ public class QuanLyDiem extends JFrame {
 						.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 202, GroupLayout.PREFERRED_SIZE)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addComponent(btnOpenFile)
-							.addGap(19)
-							.addComponent(btnThongKe)))
+							.addGap(23)
+							.addComponent(btnUpdate)
+							.addGap(9)
+							.addComponent(btnRefresh)
+							.addPreferredGap(ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+							.addComponent(btnThongKe)
+							.addGap(69)))
 					.addGap(53))
 		);
 		
 		DefaultTableModel defaultTableModel = new DefaultTableModel(data, new String [] {
-                "STT", "MSSV", "Họ tên", "Điểm GK", "Điểm CK", "Điểm khác", "Điểm tổng", "Kết quả"
+                "STT", "MSSV", "Họ tên", "Điểm GK", "Điểm CK", "Điểm khác", "Điểm tổng", "Kết quả", "Id (no care)"
             });
 		table = new JTable();
 		table.setModel(defaultTableModel);
 		
 		scrollPane.setViewportView(table);
+		
+		ListSelectionModel listSelectionModel = table.getSelectionModel();
+		listSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listSelectionModel.addListSelectionListener(new ListSelectionListener() {
+			
+			public void valueChanged(ListSelectionEvent e) {
+				// TODO Auto-generated method stub
+				int row = table.getSelectedRow();
+				int column = table.getSelectedColumn();
+				
+				textFieldMssv.setText(String.valueOf(table.getValueAt(row, 1)));
+				textFieldName.setText(String.valueOf(table.getValueAt(row, 2)));
+				textFieldGk.setText(String.valueOf(table.getValueAt(row, 3)));
+				textFieldCk.setText(String.valueOf(table.getValueAt(row, 4)));
+				textFieldKhac.setText(String.valueOf(table.getValueAt(row, 5)));
+				textFieldTong.setText(String.valueOf(table.getValueAt(row, 6)));
+				
+				idDiemChosen =  Integer.parseInt(String.valueOf(table.getValueAt(row, 8)));
+			}
+		});
+		
 		contentPane.setLayout(gl_contentPane);
+	}
+	
+	public void reloadTable() {
+		
 	}
 }

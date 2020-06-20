@@ -50,7 +50,6 @@ public class LopDAO {
         } finally {
             session.close();
         }
-        transaction.commit();
         return null;
     }
 }
