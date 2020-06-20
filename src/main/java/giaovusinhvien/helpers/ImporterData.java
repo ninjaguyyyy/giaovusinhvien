@@ -85,7 +85,7 @@ public class ImporterData {
 	    while ((line = inputFile.readLine()) != null) {
             String[] splitedLine = line.split(",");
             BangDiem diem = new BangDiem();
-            String mssv = splitedLine[1];
+            int mssv = Integer.parseInt(splitedLine[1]);
             SinhVien sv = SinhVienDAO.getByMssv(mssv);
             diem.setSv(sv);
             diem.setGiuaKi(Double.parseDouble(splitedLine[3]));

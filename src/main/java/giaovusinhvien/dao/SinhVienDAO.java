@@ -44,7 +44,7 @@ public class SinhVienDAO {
         }
     }
 	
-	public static SinhVien getByMssv(String mssv) {
+	public static SinhVien getByMssv(int mssv) {
         Session session = HibernateUtils.getSessionFactory()
                 .openSession();
         Transaction transaction = null;

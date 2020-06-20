@@ -122,7 +122,7 @@ public class QuanLyDiem extends JFrame {
 				if(returnValue == JFileChooser.APPROVE_OPTION) {
 					fileChoosen = openFileChooser.getSelectedFile();
 					try {
-						boolean isSuccess = ImporterData.importLop(fileChoosen, classChosen);
+						boolean isSuccess = ImporterData.importDiem(fileChoosen, classChosen, subChosen);
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
