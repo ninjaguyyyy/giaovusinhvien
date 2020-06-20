@@ -25,6 +25,7 @@ import javax.swing.JOptionPane;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -34,6 +35,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JScrollPane;
 import net.proteanit.sql.DbUtils;
 import javax.swing.JTextField;
+import javax.swing.JTabbedPane;
 
 public class QuanLyLop extends JFrame {
 
@@ -41,10 +43,11 @@ public class QuanLyLop extends JFrame {
 	private JPanel contentPane;
 	private final JFileChooser openFileChooser;
 	private File fileChoosen;
-	private JTable table;
 	private JTextField textFieldMssv;
 	private JTextField textFieldName;
 	private JTextField textFieldCmnd;
+	private List<SinhVien> listSv;
+	private JTable table;
 
 	/**
 	 * Launch the application.
@@ -67,6 +70,12 @@ public class QuanLyLop extends JFrame {
 	 */
 	public QuanLyLop() {
 		classChosen = "17CTT1";
+		listSv = new ArrayList<SinhVien>();
+		List<SinhVien> getListSv = SinhVienDAO.getByClass(classChosen);
+		for(SinhVien sv: getListSv) {
+			listSv.add(sv);
+		}
+		System.out.println(listSv.get(0).getHoTen());
 		openFileChooser = new JFileChooser();
 		openFileChooser.setCurrentDirectory(new File("c:\\"));
 		openFileChooser.setFileFilter(new FileNameExtensionFilter("csv", "csv"));
@@ -117,10 +126,6 @@ public class QuanLyLop extends JFrame {
 		
 		JButton btnAdd = new JButton("Thêm sinh viên");
 		
-		
-		
-		JScrollPane scrollPane = new JScrollPane();
-		
 		JLabel lblMssv = new JLabel("Mssv");
 		
 		textFieldMssv = new JTextField();
@@ -154,6 +159,22 @@ public class QuanLyLop extends JFrame {
 				SinhVienDAO.add(newSv);
 			}
 		});
+//		todo
+		
+        String[][] data = new String[listSv.size()][5];
+        for (int i = 0; i < listSv.size(); i++){
+            data[i][0] = String.valueOf(i+1);
+            data[i][1] = String.valueOf(listSv.get(i).getMssv());
+            data[i][2] = listSv.get(i).getHoTen();
+            data[i][3] = listSv.get(i).getGioiTinh();
+            data[i][4] = String.valueOf(listSv.get(i).getMssv());
+        }
+		DefaultTableModel defaultTableModel = new DefaultTableModel(data, new String [] {
+                "STT", "MSSV", "Họ Tên", "Giới Tính", "CMND"
+            });
+		table = new JTable();
+		JScrollPane scrollPane = new JScrollPane();
+		table.setModel(defaultTableModel);
 		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
@@ -163,11 +184,11 @@ public class QuanLyLop extends JFrame {
 					.addComponent(lblNewLabel)
 					.addContainerGap(429, Short.MAX_VALUE))
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(31)
-					.addComponent(lblNewLabel_1)
-					.addGap(18)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(31)
+							.addComponent(lblNewLabel_1)
+							.addGap(18)
 							.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addGap(54)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -185,8 +206,10 @@ public class QuanLyLop extends JFrame {
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 								.addComponent(comboBoxGender, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 								.addComponent(textFieldCmnd, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-						.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 458, GroupLayout.PREFERRED_SIZE))
-					.addGap(53)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(21)
+							.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 468, GroupLayout.PREFERRED_SIZE)))
+					.addGap(103)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addComponent(btnAdd)
 						.addComponent(btnOpenFile))
@@ -213,24 +236,19 @@ public class QuanLyLop extends JFrame {
 						.addComponent(textFieldCmnd, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(36)
-							.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 202, GroupLayout.PREFERRED_SIZE)
-							.addContainerGap(55, Short.MAX_VALUE))
-						.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
-							.addGap(93)
+							.addGap(81)
 							.addComponent(btnOpenFile)
 							.addGap(34)
-							.addComponent(btnAdd)
-							.addGap(120))))
+							.addComponent(btnAdd))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(32)
+							.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 195, GroupLayout.PREFERRED_SIZE)))
+					.addGap(54))
 		);
 		
-		table = new JTable();
+		
 		scrollPane.setViewportView(table);
 		contentPane.setLayout(gl_contentPane);
-		DefaultTableModel defaultTableModel = new DefaultTableModel();
-		defaultTableModel.addColumn("MSSV");
-		defaultTableModel.addColumn("Họ tên");
-		defaultTableModel.addColumn("Giới tính");
-		defaultTableModel.addColumn("CMND");
+		
 	}
 }
