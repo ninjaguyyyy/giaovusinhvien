@@ -72,7 +72,7 @@ public class QuanLyDiem extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	String[][] data = new String[0][7];
+	String[][] data = new String[0][8];
 	public QuanLyDiem() {
 		classChosen = "17CTT1";
 		
@@ -81,7 +81,7 @@ public class QuanLyDiem extends JFrame {
 		for(BangDiem diem: getListDiem) {
 			listDiem.add(diem);
 		}
-		data = new String[listDiem.size()][7];
+		data = new String[listDiem.size()][8];
         for (int i = 0; i < listDiem.size(); i++){
             data[i][0] = String.valueOf(i+1);
             data[i][1] = String.valueOf(listDiem.get(i).getSv().getMssv());
@@ -90,6 +90,7 @@ public class QuanLyDiem extends JFrame {
             data[i][4] = String.valueOf(listDiem.get(i).getCuoiKi());
             data[i][5] = String.valueOf(listDiem.get(i).getDiemkhac());
             data[i][6] = String.valueOf(listDiem.get(i).getDiemtong());
+            data[i][7] = String.valueOf(listDiem.get(i).getDiemtong() >= 5 ? "Đậu": "Rớt");
         }
         
 		openFileChooser = new JFileChooser();
@@ -139,7 +140,7 @@ public class QuanLyDiem extends JFrame {
 				for(BangDiem diem: getListDiem) {
 					listDiem.add(diem);
 				}
-		        data = new String[listDiem.size()][7];
+		        data = new String[listDiem.size()][8];
 		        for (int i = 0; i < listDiem.size(); i++){
 		            data[i][0] = String.valueOf(i+1);
 		            data[i][1] = String.valueOf(listDiem.get(i).getSv().getMssv());
@@ -148,9 +149,10 @@ public class QuanLyDiem extends JFrame {
 		            data[i][4] = String.valueOf(listDiem.get(i).getCuoiKi());
 		            data[i][5] = String.valueOf(listDiem.get(i).getDiemkhac());
 		            data[i][6] = String.valueOf(listDiem.get(i).getDiemtong());
+		            data[i][7] = String.valueOf(listDiem.get(i).getDiemtong() >= 5 ? "Đậu": "Rớt");
 		        }
 		        table.setModel(new DefaultTableModel(data, new String [] {
-		                "STT", "MSSV", "Họ tên", "Điểm GK", "Điểm CK", "Điểm khác", "Điểm tổng",
+		                "STT", "MSSV", "Họ tên", "Điểm GK", "Điểm CK", "Điểm khác", "Điểm tổng", "Kết quả"
 	            }));
 		    }
 		});
@@ -333,7 +335,7 @@ public class QuanLyDiem extends JFrame {
 		);
 		
 		DefaultTableModel defaultTableModel = new DefaultTableModel(data, new String [] {
-                "STT", "MSSV", "Họ tên", "Điểm GK", "Điểm CK", "Điểm khác", "Điểm tổng",
+                "STT", "MSSV", "Họ tên", "Điểm GK", "Điểm CK", "Điểm khác", "Điểm tổng", "Kết quả"
             });
 		table = new JTable();
 		table.setModel(defaultTableModel);
