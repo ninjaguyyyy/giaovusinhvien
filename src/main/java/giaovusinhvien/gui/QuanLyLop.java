@@ -9,6 +9,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
+import org.omg.CORBA.DATA_CONVERSION;
+
 import giaovusinhvien.dao.LopDAO;
 import giaovusinhvien.dao.SinhVienDAO;
 import giaovusinhvien.entity.Lop;
@@ -68,6 +70,8 @@ public class QuanLyLop extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	
+	String[][] data = new String[0][5];
 	public QuanLyLop() {
 		classChosen = "17CTT1";
 		listSv = new ArrayList<SinhVien>();
@@ -75,7 +79,16 @@ public class QuanLyLop extends JFrame {
 		for(SinhVien sv: getListSv) {
 			listSv.add(sv);
 		}
-		System.out.println(listSv.get(0).getHoTen());
+		
+		data = new String[listSv.size()][5];
+        for (int i = 0; i < listSv.size(); i++){
+            data[i][0] = String.valueOf(i+1);
+            data[i][1] = String.valueOf(listSv.get(i).getMssv());
+            data[i][2] = listSv.get(i).getHoTen();
+            data[i][3] = listSv.get(i).getGioiTinh();
+            data[i][4] = String.valueOf(listSv.get(i).getMssv());
+        }
+		
 		openFileChooser = new JFileChooser();
 		openFileChooser.setCurrentDirectory(new File("c:\\"));
 		openFileChooser.setFileFilter(new FileNameExtensionFilter("csv", "csv"));
@@ -99,6 +112,22 @@ public class QuanLyLop extends JFrame {
 		comboBox.addActionListener (new ActionListener () {
 		    public void actionPerformed(ActionEvent e) {
 		        classChosen = (String) comboBox.getSelectedItem();
+		        listSv.removeAll(listSv);
+		        List<SinhVien> getListSv = SinhVienDAO.getByClass(classChosen);
+				for(SinhVien sv: getListSv) {
+					listSv.add(sv);
+				}
+		        data = new String[listSv.size()][5];
+		        for (int i = 0; i < listSv.size(); i++){
+		            data[i][0] = String.valueOf(i+1);
+		            data[i][1] = String.valueOf(listSv.get(i).getMssv());
+		            data[i][2] = listSv.get(i).getHoTen();
+		            data[i][3] = listSv.get(i).getGioiTinh();
+		            data[i][4] = String.valueOf(listSv.get(i).getMssv());
+		        }
+		        table.setModel(new DefaultTableModel(data, new String [] {
+		                "STT", "MSSV", "Họ Tên", "Giới Tính", "CMND"
+	            }));
 		    }
 		});
 		JButton btnOpenFile = new JButton("Import csv data");
@@ -159,16 +188,8 @@ public class QuanLyLop extends JFrame {
 				SinhVienDAO.add(newSv);
 			}
 		});
-//		todo
 		
-        String[][] data = new String[listSv.size()][5];
-        for (int i = 0; i < listSv.size(); i++){
-            data[i][0] = String.valueOf(i+1);
-            data[i][1] = String.valueOf(listSv.get(i).getMssv());
-            data[i][2] = listSv.get(i).getHoTen();
-            data[i][3] = listSv.get(i).getGioiTinh();
-            data[i][4] = String.valueOf(listSv.get(i).getMssv());
-        }
+        
 		DefaultTableModel defaultTableModel = new DefaultTableModel(data, new String [] {
                 "STT", "MSSV", "Họ Tên", "Giới Tính", "CMND"
             });
