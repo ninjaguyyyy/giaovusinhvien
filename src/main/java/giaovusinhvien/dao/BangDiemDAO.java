@@ -9,6 +9,7 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import giaovusinhvien.entity.BangDiem;
+import giaovusinhvien.entity.Mon;
 import giaovusinhvien.entity.SinhVien;
 import giaovusinhvien.helpers.HibernateUtils;
 
@@ -31,15 +32,15 @@ public class BangDiemDAO {
         }
     }
 	
-	public static List<BangDiem> getBySub(String tenMon) {
+	public static List<BangDiem> getBySub(Mon mon) {
         List<BangDiem> ds = new ArrayList<BangDiem>();
         Session session = HibernateUtils.getSessionFactory()
                 .openSession();
         Transaction transaction = null;
         try {
         	transaction = session.beginTransaction();
-            String hql = "FROM BangDiem bd WHERE bd.mon.tenMon = :tenMon";
-            Query query = session.createQuery(hql).setParameter("tenMon", tenMon);
+            String hql = "FROM BangDiem bd WHERE bd.mon.idMon = :idMon";
+            Query query = session.createQuery(hql).setParameter("idMon", mon.getIdMon());
             ds = query.list(); 
             transaction.commit();
         } catch (HibernateException ex) {
@@ -50,4 +51,5 @@ public class BangDiemDAO {
         }
         return ds;
     }
+	
 }

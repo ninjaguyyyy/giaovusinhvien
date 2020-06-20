@@ -71,9 +71,8 @@ public class ImporterData {
 		return true;
 	}
 	
-	public static boolean importDiem(File fileInput, String tenLop, String tenMon) throws IOException {
+	public static boolean importDiem(File fileInput, String tenLop, Mon mon) throws IOException {
 		Lop lop = LopDAO.getByClassName(tenLop);
-		Mon mon = MonHocDAO.getBySubName(tenMon);
 		List<BangDiem> listDiem = new ArrayList<BangDiem>();
 		inputFile = new BufferedReader(
 	            new InputStreamReader(

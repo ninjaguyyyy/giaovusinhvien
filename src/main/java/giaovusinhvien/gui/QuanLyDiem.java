@@ -40,7 +40,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 public class QuanLyDiem extends JFrame {
 
 	private String classChosen;
-	private String subChosen;
+	private Mon subChosen;
 	private JPanel contentPane;
 	private final JFileChooser openFileChooser;
 	private File fileChoosen;
@@ -75,7 +75,7 @@ public class QuanLyDiem extends JFrame {
 	String[][] data = new String[0][8];
 	public QuanLyDiem() {
 		classChosen = "17CTT1";
-		
+		subChosen = MonHocDAO.getByClass(classChosen).get(0);
 		listDiem = new ArrayList<BangDiem>();
 		List<BangDiem> getListDiem = BangDiemDAO.getBySub(subChosen);
 		for(BangDiem diem: getListDiem) {
@@ -103,10 +103,10 @@ public class QuanLyDiem extends JFrame {
 			classesName.addElement(lop.getTenLop());
 		}
 		
-		final DefaultComboBoxModel<String> subsName = new DefaultComboBoxModel<String>();
+		final DefaultComboBoxModel<Mon> subsName = new DefaultComboBoxModel<Mon>();
 		List<Mon> dsMon = MonHocDAO.getByClass(classChosen);
 		for(Mon mon: dsMon) {
-			subsName.addElement(mon.getTenMon());
+			subsName.addElement(mon);
 		}
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -125,16 +125,16 @@ public class QuanLyDiem extends JFrame {
 		        subsName.removeAllElements();
 		        List<Mon> dsMon = MonHocDAO.getByClass(classChosen);
 		        for(Mon mon: dsMon) {
-					subsName.addElement(mon.getTenMon());
+					subsName.addElement(mon);
 				}
 		    }
 		});
 		
-		final JComboBox<String> comboBoxSub = new JComboBox<String>(subsName);
+		final JComboBox<Mon> comboBoxSub = new JComboBox<Mon>(subsName);
 		comboBoxSub.setSelectedIndex(0);
 		comboBoxSub.addActionListener (new ActionListener () {
 		    public void actionPerformed(ActionEvent e) {
-		        subChosen = (String) comboBoxSub.getSelectedItem();
+		        subChosen = (Mon) comboBoxSub.getSelectedItem();
 		        listDiem.removeAll(listDiem);
 		        List<BangDiem> getListDiem = BangDiemDAO.getBySub(subChosen);
 				for(BangDiem diem: getListDiem) {
@@ -204,7 +204,19 @@ public class QuanLyDiem extends JFrame {
 		
 		btnThongKe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				int total = listDiem.size();
+				int passCount = 0;
+				for(BangDiem diem: listDiem) {
+					if(diem.getDiemtong() >= 5) {
+						passCount++;
+					}
+				}
+				double ratePass = (passCount*1.0/total)*100;
+				JOptionPane.showMessageDialog(
+						null, 
+						"Tổng: " + total + "\nĐậu: " + passCount + " (" + ratePass + "%)"
+						+ "\nRớt: " + (total - passCount) + " (" + (100 - ratePass) + "%)"
+				);
 			}
 		});
 		

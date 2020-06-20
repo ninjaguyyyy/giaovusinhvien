@@ -67,4 +67,8 @@ public class Mon {
         this.lop = lop;
     }
     
+    public String toString() {
+    	return this.tenMon;
+    }
+
 }
