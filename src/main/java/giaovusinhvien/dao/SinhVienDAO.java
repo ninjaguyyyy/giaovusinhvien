@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import giaovusinhvien.entity.GiaoVu;
 import giaovusinhvien.entity.Lop;
 import giaovusinhvien.entity.Mon;
 import giaovusinhvien.entity.SinhVien;
@@ -88,5 +89,27 @@ public class SinhVienDAO {
         }
         return ds;
     }
+	
+	public static boolean checkLoginTrue(String mssv, String pass) {
+		Session session = HibernateUtils.getSessionFactory()
+                .openSession();
+		SinhVien sv = null;
+		Transaction transaction = null;
+        try {
+        	transaction = session.beginTransaction();
+            String hql = "FROM SinhVien sv WHERE sv.mssv = :mssv";
+            sv = (SinhVien) session.createQuery(hql).setParameter("mssv", Integer.parseInt(mssv)).uniqueResult();
+            if (sv != null && sv.getPass().equals(pass)) {
+            	transaction.commit();
+                return true;
+            }
+        } catch (HibernateException ex) {
+        	transaction.rollback();
+            System.out.println(ex);
+        } finally {
+            session.close();
+        }
+		return false;
+	}
 	
 }

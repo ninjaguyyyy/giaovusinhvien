@@ -26,6 +26,7 @@ import javax.swing.WindowConstants;
 
 import giaovusinhvien.dao.GiaoVuDAO;
 import giaovusinhvien.dao.LopDAO;
+import giaovusinhvien.dao.SinhVienDAO;
 import giaovusinhvien.entity.Lop;
 
 /**
@@ -33,7 +34,16 @@ import giaovusinhvien.entity.Lop;
  * @author nguye
  */
 public class Login extends JFrame {
-    private JComboBox rolejCB;
+	public static int mssv;
+	
+    public static int getUser() {
+		return mssv;
+	}
+
+	public static void setUser(int mssv) {
+		Login.mssv = mssv;
+	}
+	private JComboBox rolejCB;
     private JLabel imgPass;
     private JLabel imgRole;
     private JLabel imgUser;
@@ -186,7 +196,15 @@ public class Login extends JFrame {
 				return;
 			}
 		} else {
-			
+			boolean isSuccess = SinhVienDAO.checkLoginTrue(username, password);
+			if(isSuccess) {
+				setUser(Integer.parseInt(username));
+				new SinhVienMenu().setVisible(true);
+		    	setVisible(false);
+			} else {
+				JOptionPane.showMessageDialog(null, "Tên tài khoản hoặc mật khẩu không đúng.");
+				return;
+			}
 		}
     	
     }
