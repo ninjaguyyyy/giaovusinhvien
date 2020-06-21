@@ -21,6 +21,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import java.awt.Font;
 
 public class GiaoVuMenu extends JFrame {
 	
@@ -91,7 +92,8 @@ public class GiaoVuMenu extends JFrame {
 		});
 		textFieldChangePass = new JTextField();
 		textFieldChangePass.setColumns(10);
-		JLabel lblMenu = new JLabel("Menu");
+		JLabel lblMenu = new JLabel("Menu Gia\u0301o vu\u0323");
+		lblMenu.setFont(new Font("Tahoma", Font.BOLD, 25));
 		
 		JButton btnChangePass = new JButton("\u0110\u00F4\u0309i m\u00E2\u0323t kh\u00E2\u0309u");
 		btnChangePass.addActionListener(new ActionListener() {
@@ -108,46 +110,46 @@ public class GiaoVuMenu extends JFrame {
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel.createSequentialGroup()
-					.addGap(47)
-					.addComponent(btnManageClass)
-					.addPreferredGap(ComponentPlacement.RELATED, 161, Short.MAX_VALUE)
-					.addComponent(btnManageSub)
-					.addGap(134)
-					.addComponent(btnManagePoint)
-					.addGap(64))
-				.addGroup(gl_panel.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(btnLogout)
-					.addPreferredGap(ComponentPlacement.RELATED, 362, Short.MAX_VALUE)
-					.addComponent(textFieldChangePass, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(btnChangePass)
-					.addGap(55))
-				.addGroup(gl_panel.createSequentialGroup()
-					.addGap(334)
-					.addComponent(lblMenu)
-					.addContainerGap(341, Short.MAX_VALUE))
+					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+						.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(btnLogout)
+							.addPreferredGap(ComponentPlacement.RELATED, 158, Short.MAX_VALUE)
+							.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
+								.addGroup(gl_panel.createSequentialGroup()
+									.addComponent(lblMenu)
+									.addGap(148)
+									.addComponent(textFieldChangePass, GroupLayout.PREFERRED_SIZE, 122, GroupLayout.PREFERRED_SIZE))
+								.addComponent(btnChangePass)))
+						.addGroup(gl_panel.createSequentialGroup()
+							.addGap(162)
+							.addComponent(btnManageClass)
+							.addGap(37)
+							.addComponent(btnManageSub)
+							.addGap(37)
+							.addComponent(btnManagePoint)))
+					.addContainerGap())
 		);
 		gl_panel.setVerticalGroup(
 			gl_panel.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_panel.createSequentialGroup()
+				.addGroup(Alignment.LEADING, gl_panel.createSequentialGroup()
 					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panel.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(btnLogout)
-							.addGap(70)
-							.addComponent(lblMenu))
+							.addGap(47)
+							.addComponent(btnLogout))
 						.addGroup(gl_panel.createSequentialGroup()
 							.addGap(27)
 							.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-								.addComponent(btnChangePass)
-								.addComponent(textFieldChangePass, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
-					.addPreferredGap(ComponentPlacement.RELATED, 168, Short.MAX_VALUE)
+								.addComponent(lblMenu)
+								.addComponent(textFieldChangePass, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(btnChangePass)))
+					.addGap(100)
 					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnManageClass)
-						.addComponent(btnManagePoint)
-						.addComponent(btnManageSub))
-					.addGap(92))
+						.addComponent(btnManageSub)
+						.addComponent(btnManagePoint))
+					.addContainerGap(191, Short.MAX_VALUE))
 		);
 		panel.setLayout(gl_panel);
 	}
