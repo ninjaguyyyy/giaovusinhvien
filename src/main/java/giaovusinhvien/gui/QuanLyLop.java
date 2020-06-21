@@ -74,11 +74,7 @@ public class QuanLyLop extends JFrame {
 	String[][] data = new String[0][5];
 	public QuanLyLop() {
 		classChosen = "17CTT1";
-		listSv = new ArrayList<SinhVien>();
-		List<SinhVien> getListSv = SinhVienDAO.getByClass(classChosen);
-		for(SinhVien sv: getListSv) {
-			listSv.add(sv);
-		}
+		listSv = SinhVienDAO.getByClass(classChosen);
 		
 		data = new String[listSv.size()][5];
         for (int i = 0; i < listSv.size(); i++){
