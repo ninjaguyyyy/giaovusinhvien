@@ -6,6 +6,10 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import giaovusinhvien.dao.GiaoVuDAO;
+import giaovusinhvien.entity.GiaoVu;
+
 import javax.swing.JButton;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -16,10 +20,13 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JLabel;
+import javax.swing.JTextField;
 
 public class GiaoVuMenu extends JFrame {
-
+	
+	private static final String gvUsername = Login.getGvUsername();
 	private JPanel contentPane;
+	private JTextField textFieldChangePass;
 
 	/**
 	 * Launch the application.
@@ -82,8 +89,21 @@ public class GiaoVuMenu extends JFrame {
 				new Login().setVisible(true);
 			}
 		});
-		
+		textFieldChangePass = new JTextField();
+		textFieldChangePass.setColumns(10);
 		JLabel lblMenu = new JLabel("Menu");
+		
+		JButton btnChangePass = new JButton("\u0110\u00F4\u0309i m\u00E2\u0323t kh\u00E2\u0309u");
+		btnChangePass.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String newPass = textFieldChangePass.getText();
+				GiaoVu gv = GiaoVuDAO.getByUsername(gvUsername);
+				gv.setPass(newPass);
+				GiaoVuDAO.update(gv);
+			}
+		});
+		
+		
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
@@ -98,7 +118,11 @@ public class GiaoVuMenu extends JFrame {
 				.addGroup(gl_panel.createSequentialGroup()
 					.addContainerGap()
 					.addComponent(btnLogout)
-					.addContainerGap(464, Short.MAX_VALUE))
+					.addPreferredGap(ComponentPlacement.RELATED, 362, Short.MAX_VALUE)
+					.addComponent(textFieldChangePass, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(btnChangePass)
+					.addGap(55))
 				.addGroup(gl_panel.createSequentialGroup()
 					.addGap(334)
 					.addComponent(lblMenu)
@@ -107,10 +131,17 @@ public class GiaoVuMenu extends JFrame {
 		gl_panel.setVerticalGroup(
 			gl_panel.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panel.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(btnLogout)
-					.addGap(70)
-					.addComponent(lblMenu)
+					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(btnLogout)
+							.addGap(70)
+							.addComponent(lblMenu))
+						.addGroup(gl_panel.createSequentialGroup()
+							.addGap(27)
+							.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+								.addComponent(btnChangePass)
+								.addComponent(textFieldChangePass, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
 					.addPreferredGap(ComponentPlacement.RELATED, 168, Short.MAX_VALUE)
 					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnManageClass)
@@ -120,5 +151,4 @@ public class GiaoVuMenu extends JFrame {
 		);
 		panel.setLayout(gl_panel);
 	}
-
 }

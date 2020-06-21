@@ -35,8 +35,17 @@ import giaovusinhvien.entity.Lop;
  */
 public class Login extends JFrame {
 	public static int mssv;
+	public static String gvUsername;
 	
-    public static int getUser() {
+    public static String getGvUsername() {
+		return gvUsername;
+	}
+
+	public static void setGvUsername(String gvUsername) {
+		Login.gvUsername = gvUsername;
+	}
+
+	public static int getUser() {
 		return mssv;
 	}
 
@@ -189,6 +198,7 @@ public class Login extends JFrame {
 		if(roleIndex == 0) {
 			boolean isTrue = GiaoVuDAO.checkLoginTrue(username, password);
 			if(isTrue) {
+				setGvUsername(username);
 				new GiaoVuMenu().setVisible(true);
 		    	setVisible(false);
 			} else {

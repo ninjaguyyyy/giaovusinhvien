@@ -6,6 +6,12 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import giaovusinhvien.dao.GiaoVuDAO;
+import giaovusinhvien.dao.SinhVienDAO;
+import giaovusinhvien.entity.GiaoVu;
+import giaovusinhvien.entity.SinhVien;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
@@ -13,10 +19,13 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JLabel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JTextField;
 
 public class SinhVienMenu extends JFrame {
 
+	private static final int mssv = Login.getUser(); 
 	private JPanel contentPane;
+	private JTextField textFieldChangePass;
 
 	/**
 	 * Launch the application.
@@ -60,15 +69,33 @@ public class SinhVienMenu extends JFrame {
 			}
 		});
 		
+		textFieldChangePass = new JTextField();
+		textFieldChangePass.setColumns(10);
 		JLabel lblMenu = new JLabel("Menu");
+		
+		JButton btnChangePass = new JButton("\u0110\u00F4\u0309i m\u00E2\u0323t kh\u00E2\u0309u");
+		btnChangePass.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String newPass = textFieldChangePass.getText();
+				SinhVien sv = SinhVienDAO.getByMssv(mssv);
+				sv.setPass(newPass);
+				SinhVienDAO.update(sv);
+			}
+		});
+		
+		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addComponent(btnLogout)
-					.addContainerGap(335, Short.MAX_VALUE))
-				.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
-					.addContainerGap(187, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED, 144, Short.MAX_VALUE)
+					.addComponent(textFieldChangePass, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(btnChangePass)
+					.addContainerGap())
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap(199, Short.MAX_VALUE)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addComponent(lblMenu)
 						.addComponent(btnManagePoint))
@@ -78,7 +105,10 @@ public class SinhVienMenu extends JFrame {
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(btnLogout)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btnLogout)
+						.addComponent(btnChangePass)
+						.addComponent(textFieldChangePass, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(14)
 					.addComponent(lblMenu)
 					.addPreferredGap(ComponentPlacement.RELATED, 93, Short.MAX_VALUE)

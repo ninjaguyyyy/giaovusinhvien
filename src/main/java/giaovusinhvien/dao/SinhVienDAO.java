@@ -112,4 +112,20 @@ public class SinhVienDAO {
 		return false;
 	}
 	
+	public static void update(SinhVien sv) {
+        Session session = HibernateUtils.getSessionFactory()
+                .openSession();
+        Transaction transaction = null;
+        try {
+        	transaction = session.beginTransaction();
+            session.update(sv);
+            transaction.commit();
+        } catch (HibernateException ex) {
+        	transaction.rollback();
+            System.out.println(ex);
+        } finally {
+            session.close();
+        }
+	}
+	
 }
