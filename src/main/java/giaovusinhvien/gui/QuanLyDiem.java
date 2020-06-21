@@ -143,26 +143,29 @@ public class QuanLyDiem extends JFrame {
 		comboBoxSub.addActionListener (new ActionListener () {
 		    public void actionPerformed(ActionEvent e) {
 		        subChosen = (Mon) comboBoxSub.getSelectedItem();
-		        listDiem.removeAll(listDiem);
-		        List<BangDiem> getListDiem = BangDiemDAO.getBySub(subChosen);
-				for(BangDiem diem: getListDiem) {
-					listDiem.add(diem);
-				}
-		        data = new String[listDiem.size()][9];
-		        for (int i = 0; i < listDiem.size(); i++){
-		            data[i][0] = String.valueOf(i+1);
-		            data[i][1] = String.valueOf(listDiem.get(i).getSv().getMssv());
-		            data[i][2] = listDiem.get(i).getSv().getHoTen();
-		            data[i][3] = String.valueOf(listDiem.get(i).getGiuaKi());
-		            data[i][4] = String.valueOf(listDiem.get(i).getCuoiKi());
-		            data[i][5] = String.valueOf(listDiem.get(i).getDiemkhac());
-		            data[i][6] = String.valueOf(listDiem.get(i).getDiemtong());
-		            data[i][7] = String.valueOf(listDiem.get(i).getDiemtong() >= 5 ? "Đậu": "Rớt");
-		            data[i][8] = String.valueOf(listDiem.get(i).getIdDiem());
+		        if(subChosen != null) {
+		        	listDiem.removeAll(listDiem);
+			        List<BangDiem> getListDiem = BangDiemDAO.getBySub(subChosen);
+					for(BangDiem diem: getListDiem) {
+						listDiem.add(diem);
+					}
+			        data = new String[listDiem.size()][9];
+			        for (int i = 0; i < listDiem.size(); i++){
+			            data[i][0] = String.valueOf(i+1);
+			            data[i][1] = String.valueOf(listDiem.get(i).getSv().getMssv());
+			            data[i][2] = listDiem.get(i).getSv().getHoTen();
+			            data[i][3] = String.valueOf(listDiem.get(i).getGiuaKi());
+			            data[i][4] = String.valueOf(listDiem.get(i).getCuoiKi());
+			            data[i][5] = String.valueOf(listDiem.get(i).getDiemkhac());
+			            data[i][6] = String.valueOf(listDiem.get(i).getDiemtong());
+			            data[i][7] = String.valueOf(listDiem.get(i).getDiemtong() >= 5 ? "Đậu": "Rớt");
+			            data[i][8] = String.valueOf(listDiem.get(i).getIdDiem());
+			        }
+			        table.setModel(new DefaultTableModel(data, new String [] {
+			                "STT", "MSSV", "Họ tên", "Điểm GK", "Điểm CK", "Điểm khác", "Điểm tổng", "Kết quả", "Id (no care)"
+		            }));
 		        }
-		        table.setModel(new DefaultTableModel(data, new String [] {
-		                "STT", "MSSV", "Họ tên", "Điểm GK", "Điểm CK", "Điểm khác", "Điểm tổng", "Kết quả", "Id (no care)"
-	            }));
+		        
 		    }
 		});
 		
