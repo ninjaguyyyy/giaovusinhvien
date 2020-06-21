@@ -21,16 +21,21 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 import giaovusinhvien.dao.LopDAO;
 import giaovusinhvien.dao.MonHocDAO;
+import giaovusinhvien.dao.SV_Mon_DAO;
 import giaovusinhvien.dao.SinhVienDAO;
 import giaovusinhvien.entity.Lop;
 import giaovusinhvien.entity.Mon;
+import giaovusinhvien.entity.SV_Mon;
 import giaovusinhvien.entity.SinhVien;
 import giaovusinhvien.helpers.ImporterData;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -44,6 +49,7 @@ public class QuanLyMonHoc extends JFrame {
 	private JTable table;
 	private List<Mon> listMon;
 	private List<SinhVien> listSv;
+	private List<SV_Mon> listSvm;
 	
 	private JPanel contentPane;
 
@@ -69,10 +75,29 @@ public class QuanLyMonHoc extends JFrame {
 	String[][] data = new String[0][3];
 	String[][] dataSv = new String[0][5];
 	private JTable tableSv;
+	private JTextField txtMssvOut;
+	private JTextField textFieldMssvIn;
 	public QuanLyMonHoc() {
 		classChosen = "17CTT1";
 		listSv = SinhVienDAO.getByClass(classChosen);
 		subChosen = MonHocDAO.getByClass(classChosen).get(0);
+		listSvm = SV_Mon_DAO.getBySub(subChosen);
+		for(int i = 0; i < listSv.size(); i++) {
+			for(int j = 0; j < listSvm.size(); j++) {
+				if(listSv.get(i).getIdSV() == listSvm.get(j).getSv().getIdSV() && listSvm.get(j).getActionStatus().equals("out")) {
+					listSv.remove(i);
+					i--;
+					break;
+				}
+			}
+		}
+		for(int k = 0; k < listSvm.size(); k++) {
+			if(listSvm.get(k).getActionStatus().equals("in")) {
+				listSv.add(listSvm.get(k).getSv());
+			}
+		}
+		
+		
 		listMon = new ArrayList<Mon>();
 		List<Mon> getListMon = MonHocDAO.getByClass(classChosen);
 		for(Mon mon: getListMon) {
@@ -105,6 +130,7 @@ public class QuanLyMonHoc extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 846, 445);
 		contentPane = new JPanel();
+		contentPane.setToolTipText("Nhập mssv");
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
@@ -170,7 +196,6 @@ public class QuanLyMonHoc extends JFrame {
 		comboBoxSub.setSelectedIndex(0);
 		comboBoxSub.addActionListener (new ActionListener () {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("set lai table");
 				subChosen = (Mon) comboBoxSub.getSelectedItem();
 				// update table mon
 		        if(subChosen != null) {
@@ -190,6 +215,23 @@ public class QuanLyMonHoc extends JFrame {
 					for(SinhVien sv: getListSv) {
 						listSv.add(sv);
 					}
+					
+					listSvm = SV_Mon_DAO.getBySub(subChosen);
+					for(int i = 0; i < listSv.size(); i++) {
+						for(int j = 0; j < listSvm.size(); j++) {
+							if(listSv.get(i).getIdSV() == listSvm.get(j).getSv().getIdSV() && listSvm.get(j).getActionStatus().equals("out")) {
+								listSv.remove(i);
+								i--;
+								break;
+							}
+						}
+					}
+					for(int k = 0; k < listSvm.size(); k++) {
+						if(listSvm.get(k).getActionStatus().equals("in")) {
+							listSv.add(listSvm.get(k).getSv());
+						}
+					}
+					
 			        dataSv = new String[listSv.size()][5];
 			        for (int i = 0; i < listSv.size(); i++){
 			        	dataSv[i][0] = String.valueOf(i+1);
@@ -209,6 +251,52 @@ public class QuanLyMonHoc extends JFrame {
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
 		
+		JButton btnOut = new JButton("Rút khỏi lớp");
+		btnOut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SinhVien svOut = SinhVienDAO.getByMssv(Integer.parseInt(txtMssvOut.getText()));
+				SV_Mon sv_mon = new SV_Mon();
+				sv_mon.setMon(subChosen);
+				sv_mon.setSv(svOut);
+				sv_mon.setActionStatus("out");
+				boolean result = SV_Mon_DAO.add(sv_mon);
+				String nofitication;
+				if(result == false) {
+					nofitication = "Sinh viên này đã xin rút hoặc xin học 1 lần rồi. Không thể xin thêm lần nữa.";
+				} else {
+					nofitication = "Đã xin thành công";
+				}
+				JOptionPane.showMessageDialog(null, nofitication);
+			}
+		});
+		
+		txtMssvOut = new JTextField();
+		txtMssvOut.setToolTipText("Nhập mssv");
+		txtMssvOut.setColumns(10);
+		
+		textFieldMssvIn = new JTextField();
+		textFieldMssvIn.setToolTipText("Nhập mssv");
+		textFieldMssvIn.setColumns(10);
+		
+		JButton btnIn = new JButton("Xin vào lớp");
+		btnIn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SinhVien svOut = SinhVienDAO.getByMssv(Integer.parseInt(textFieldMssvIn.getText()));
+				SV_Mon sv_mon = new SV_Mon();
+				sv_mon.setMon(subChosen);
+				sv_mon.setSv(svOut);
+				sv_mon.setActionStatus("in");
+				boolean result = SV_Mon_DAO.add(sv_mon);
+				String nofitication;
+				if(result == false) {
+					nofitication = "Sinh viên này đã xin rút hoặc xin học 1 lần rồi. Không thể xin thêm lần nữa.";
+				} else {
+					nofitication = "Đã xin thành công";
+				}
+				JOptionPane.showMessageDialog(null, nofitication);
+			}
+		});
+		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
@@ -219,27 +307,38 @@ public class QuanLyMonHoc extends JFrame {
 							.addComponent(lblNewLabel)
 							.addGap(188))
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
 								.addGroup(gl_contentPane.createSequentialGroup()
 									.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 208, GroupLayout.PREFERRED_SIZE)
 									.addGap(18)
 									.addComponent(scrollPane_1, GroupLayout.PREFERRED_SIZE, 308, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_contentPane.createSequentialGroup()
+								.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
 									.addComponent(lblNewLabel_1)
 									.addGap(18)
 									.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 									.addGap(51)
 									.addComponent(lblNewLabel_2)
 									.addGap(18)
-									.addComponent(comboBoxSub, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+									.addComponent(comboBoxSub, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+										.addGroup(gl_contentPane.createSequentialGroup()
+											.addComponent(textFieldMssvIn, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+											.addGap(18)
+											.addComponent(btnIn))
+										.addGroup(gl_contentPane.createSequentialGroup()
+											.addComponent(txtMssvOut, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+											.addGap(18)
+											.addComponent(btnOut)))))
 							.addGap(37)))
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addComponent(btnMenu)
-							.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addComponent(btnOpenFile)
-							.addGap(109))))
+							.addGap(109)))
+					.addGap(109))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -253,15 +352,20 @@ public class QuanLyMonHoc extends JFrame {
 								.addComponent(lblNewLabel_1)
 								.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 								.addComponent(lblNewLabel_2)
-								.addComponent(comboBoxSub, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+								.addComponent(comboBoxSub, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(btnOut)
+								.addComponent(txtMssvOut, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
 						.addComponent(btnMenu))
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(textFieldMssvIn, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnIn))
+					.addPreferredGap(ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(125)
 							.addComponent(btnOpenFile)
-							.addGap(61))
-						.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
-							.addPreferredGap(ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
+							.addGap(183))
+						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 								.addComponent(scrollPane_1, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
 								.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 202, GroupLayout.PREFERRED_SIZE))
@@ -275,6 +379,7 @@ public class QuanLyMonHoc extends JFrame {
 		tableSv = new JTable();
 		tableSv.setModel(defaultTableModelSv);
 		scrollPane_1.setViewportView(tableSv);
+		
 		
 		DefaultTableModel defaultTableModel = new DefaultTableModel(data, new String [] {
                 "Mã môn", "Tên môn", "Phòng học"

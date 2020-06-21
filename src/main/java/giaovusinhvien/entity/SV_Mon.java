@@ -22,9 +22,20 @@ public class SV_Mon {
 		
 		@ManyToOne
 	    @JoinColumn(name="id_sv")
-	    private Lop sv;
-
+	    private SinhVien sv;
+		
+		@Column(name = "actionStatus")
+		private String actionStatus; // in | out
+		
 		public SV_Mon() {
+		}
+
+		public String getActionStatus() {
+			return actionStatus;
+		}
+
+		public void setActionStatus(String actionStatus) {
+			this.actionStatus = actionStatus;
 		}
 
 		public int getIdSV_Mon() {
@@ -43,11 +54,11 @@ public class SV_Mon {
 			this.mon = mon;
 		}
 
-		public Lop getSv() {
+		public SinhVien getSv() {
 			return sv;
 		}
 
-		public void setSv(Lop sv) {
+		public void setSv(SinhVien sv) {
 			this.sv = sv;
 		}
 		
